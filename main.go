@@ -5,8 +5,12 @@ import (
 	"os"
 )
 
+var (
+	port     = os.Getenv("PORT")
+	temp_dir = "tmp"
+)
+
 func main() {
-	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
