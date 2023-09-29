@@ -19,7 +19,27 @@ func uploadVideo(c *gin.Context) {
 		return
 	}
 
-	// TODO: check if the mimetype of the file is a valid video one
+	// get the mime type
+	mime, err := getMimeType(file)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "failed to parse request",
+			"error":   err.Error(),
+			"status":  http.StatusBadRequest,
+		})
+		return
+	}
+
+	// check if mime type is valid
+	// returns false if it isnt valid
+	if !isVideoMimeType(mime) {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "failed to parse request",
+			"error":   "tut-tut, thats not a video file. upload a video padawan",
+			"status":  http.StatusBadRequest,
+		})
+		return
+	}
 
 	// generate a unique name
 	videoName := generateUniqueName(file.Filename)
