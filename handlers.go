@@ -47,10 +47,10 @@ func uploadVideo(c *gin.Context) {
 	// path to store video
 	videoPath := filepath.Join(temp_dir, videoName)
 
-	if c.SaveUploadedFile(file, videoPath) != nil {
+	if err := c.SaveUploadedFile(file, videoPath); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "failed to upload file",
-			"error":   err,
+			"error":   err.Error(),
 			"status":  http.StatusInternalServerError,
 		})
 		return
@@ -58,7 +58,7 @@ func uploadVideo(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "success",
-		"url":     fmt.Sprintf("%s/api/v1/videos/%s", c.Request.Host, videoName),
+		"data":    gin.H{"url": fmt.Sprintf("%s/api/v1/videos/%s", c.Request.Host, videoName)},
 		"status":  http.StatusOK,
 	})
 }
